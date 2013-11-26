@@ -46,11 +46,11 @@
 				<table cellpadding="0" cellspacing="0" border="0" class="datatable table table-striped table-bordered">
 					<thead>
 						<tr>
-							<th>Rendering engine</th>
-							<th>Browser</th>
-							<th>Platform(s)</th>
-							<th>Engine version</th>
-							<th>CSS grade</th>
+							<th>วัน เดือน ปี</th>
+							<th>ชื่อยา</th>
+							<th>ขนาด</th>
+							<th>บริษัท</th>
+							<th>ราคา/หน่วย</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -472,7 +472,13 @@
 					</tfoot>
 				</table>
 			</div>
+
+        <hr>
+        <footer>
+            footer 2013
+        </footer>
 		</div>
+
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
