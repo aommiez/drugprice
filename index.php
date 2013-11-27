@@ -67,6 +67,9 @@
                 </div>
                 <button type="submit" class="btn btn-default">ค้นหา</button>
             </form>
+            <hr>
+            xxxx
+
         </div>
     </div>
 		<div id="wrap">
@@ -103,6 +106,199 @@
                             <td class="center">X</td>
                             <td class="center">X</td>
 						</tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr><tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+                        <tr class="gradeX">
+                            <td>Trident</td>
+                            <td>
+                                Internet
+                                Explorer
+                                4.0
+                            </td>
+                            <td>Win 95+</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">4</td>
+                            <td class="center">X</td>
+                            <td class="center">X</td>
+                        </tr>
+
 					</tbody>
 					<tfoot>
                     <tr>
@@ -133,7 +329,8 @@
 		<script type="text/javascript">
 		$(document).ready(function() {
 			$('.datatable').dataTable({
-				"sPaginationType": "bs_full"
+				"sPaginationType": "bs_full",
+                "aaSorting": [ [0,'asc'], [1,'asc'] ]
 			});	
 			$('.datatable').each(function(){
 				var datatable = $(this);
