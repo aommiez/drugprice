@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e0adf94f-d7a3-4809-9133-32455c7abb5f" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="drugprice.iws" />
@@ -30,7 +29,7 @@
       <file leaf-file-name="index.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="52" column="42" selection-start="1930" selection-end="1930" vertical-scroll-proportion="0.41877794" vertical-offset="499" max-vertical-offset="7635">
+            <state line="103" column="53" selection-start="4297" selection-end="4297" vertical-scroll-proportion="0.48584202" vertical-offset="1219" max-vertical-offset="2385">
               <folding />
             </state>
           </provider>
@@ -39,7 +38,7 @@
       <file leaf-file-name="a.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/a.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="0" selection-start="451" selection-end="451" vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="630">
+            <state line="33" column="14" selection-start="416" selection-end="416" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="630">
               <folding />
             </state>
           </provider>
@@ -66,11 +65,11 @@
         <option value="$PROJECT_DIR$/js/bootstrap-dataTables-paging.js" />
         <option value="$PROJECT_DIR$/css/drugprice.css" />
         <option value="$PROJECT_DIR$/js/jquery.js" />
-        <option value="$PROJECT_DIR$/css/a.css" />
         <option value="$PROJECT_DIR$/bootstrap.css" />
         <option value="$PROJECT_DIR$/dataTables.bootstrap.js" />
         <option value="$PROJECT_DIR$/dataTables.bootstrap.css" />
         <option value="$PROJECT_DIR$/1.php" />
+        <option value="$PROJECT_DIR$/css/a.css" />
         <option value="$PROJECT_DIR$/index.php" />
       </list>
     </option>
@@ -107,7 +106,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -128,6 +126,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -135,8 +134,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="FullScreen" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -223,6 +222,20 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
+        <state line="52" column="42" selection-start="1930" selection-end="1930" vertical-scroll-proportion="0.0" vertical-offset="499" max-vertical-offset="7635">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/css/a.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="0" selection-start="451" selection-end="451" vertical-scroll-proportion="0.0" vertical-offset="540" max-vertical-offset="630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
         <state line="486" column="66" selection-start="13470" selection-end="13470" vertical-scroll-proportion="0.0" vertical-offset="6829" max-vertical-offset="7545">
           <folding />
         </state>
@@ -235,21 +248,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/a.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="0" selection-start="451" selection-end="451" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="630">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Downloads/Datatables-Bootstrap3-master/BS3/examples/pagination_full.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="8" selection-start="242" selection-end="336" vertical-scroll-proportion="-5.0" vertical-offset="0" max-vertical-offset="7080" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/css/a.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="14" selection-start="416" selection-end="416" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="630">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="52" column="42" selection-start="1930" selection-end="1930" vertical-scroll-proportion="0.41877794" vertical-offset="499" max-vertical-offset="7635">
+        <state line="103" column="53" selection-start="4297" selection-end="4297" vertical-scroll-proportion="0.48584202" vertical-offset="1219" max-vertical-offset="2385">
           <folding />
         </state>
       </provider>
