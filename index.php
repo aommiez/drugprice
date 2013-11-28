@@ -84,9 +84,7 @@ $hospitals = App::hospitals();
                 <button type="submit" class="btn btn-default">ค้นหา</button>
             </form>
             <hr>
-            <!--
-            xxxx
-            -->
+            ex :
 
         </div>
     </div>

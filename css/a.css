@@ -6,6 +6,7 @@ div.dataTables_length label {
     width: 200px;
     float: left;
     text-align: left;
+    margin-right: 6px;
 }
 
 div.dataTables_length select {
@@ -15,6 +16,7 @@ div.dataTables_length select {
 div.dataTables_filter label {
     float: right;
     width: 200px;
+    margin-right: 6px;
 }
 
 div.dataTables_info {
