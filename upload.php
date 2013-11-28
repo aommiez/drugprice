@@ -91,6 +91,10 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         <form class="form-inline text-center" role="form" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label class="sr-only">Excel file</label>
+                Demo File : <a href="demo.xlsx"> download</a>
+            </div>
+            <div class="form-group">
+                <label class="sr-only">Excel file</label>
                 <input type="file" class="form-control" name="excel_doc" placeholder="Excel file">
             </div>
             <button type="submit" class="btn btn-default">upload</button>
