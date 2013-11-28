@@ -12,8 +12,6 @@ if(!App::isAdmin()){
     header("location: ../index.php");
 }
 
-if(!App::getHospitalId($_POST["hospital_name"])){
-
-}
-header("location: index.php");
+App::addHospital($_POST["hospital_name"]);
+header("location: index.php#hospital");
 exit();

@@ -2,10 +2,15 @@
 include_once "App.php";
 $user = App::getUser();
 $input = isset($_GET)? $_GET: null;
+if(isset($input["date_start"])){
+    $input["date_start"] = str_replace('/', '-', $input["date_start"]);
+}
+if(isset($input["date_end"])){
+    $input["date_end"] = str_replace('/', '-', $input["date_end"]);
+}
 $drugs = App::allDrug($input);
+$stats = App::getStats($input);;
 $hospitals = App::hospitals();
-
-$stats = App::getStats();;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,9 +66,12 @@ $stats = App::getStats();;
                 <div class="form-group">
                     <label class="sr-only" for="hospitalName">Hospital</label>
                     <select class="form-control" id="hospitalName" name="hospitalId">
-                        <option>ชื่อโรงพยาบาล</option>
+                        <option value="">ทั้งหมด</option>
                         <?php foreach($hospitals as $key =>$value){?>
-                            <option value="<?php echo $value["idhospital"];?>"><?php echo $value["hospital_name"];?></option>
+                            <option value="<?php echo $value["idhospital"];?>"
+                                <?php if(isset($_GET["hospitalId"]) && $_GET["hospitalId"]==$value["idhospital"]) echo "selected"; ?>>
+                                <?php echo $value["hospital_name"];?>
+                            </option>
                         <?php }?>
                     </select>
                 </div>
@@ -86,12 +94,14 @@ $stats = App::getStats();;
                 <button type="submit" class="btn btn-default">ค้นหา</button>
             </form>
             <hr>
-            <div>
-                <div>avg: <?php echo $stats["avg"];?></div>
-                <div>min: <?php echo $stats["min"];?></div>
-                <div>max: <?php echo $stats["max"];?></div>
+            <div style="font-size: 18px;">
+                <span style="padding: 0 20px 0 0;">avg: <span class="stat-avg"><?php //echo $stats["avg"];?></span></span>
+                <span style="padding: 0 20px;">min: <span class="stat-min"><?php //echo $stats["min"];?></span></span>
+                <span style="padding: 0 20px;">max: <span class="stat-max"><?php //echo $stats["max"];?></span></span>
+                <!--
+                <span style="padding: 0 20px;"><button class="btn btn-default stat-calculate">Calculate</button></span>
+                -->
             </div>
-
         </div>
     </div>
 		<div id="wrap">
@@ -118,7 +128,7 @@ $stats = App::getStats();;
                                 <td><?php echo $value["name"];?></td>
                                 <td><?php echo $value["content"];?></td>
                                 <td><?php echo $value["company"];?></td>
-                                <td><?php echo $value["price"];?></td>
+                                <td class="price-field"><?php echo $value["price"];?></td>
                                 <td><?php echo $value["size"];?></td>
                                 <td><?php echo $value["qtc"];?></td>
                                 <td><?php echo $value["total_money"];?></td>
@@ -133,22 +143,29 @@ $stats = App::getStats();;
 
 		</div>
 
-        <link rel="stylesheet" type="text/css" href="css/TableTools.css">
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
         <script src="js/datatables.js"></script>
+        <!--
         <script src="js/TableTools.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/TableTools.css">
+        -->
         <script src="js/bootstrap-datepicker.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function() {
-			$('.datatable').dataTable({
+			var oTable = $('.datatable').dataTable({
 				"sPaginationType": "bs_full",
+                "aLengthMenu": [[200],[200]],
+                "iDisplayLength": 200,
                 "aaSorting": [ [0,'asc'], [1,'asc'] ],
                 "sDom": 'T<"clear">lfrtip',
+                "bFilter": false
+                /*,
                 "oTableTools": {
                     "sSwfPath": "media/swf/copy_csv_xls_pdf.swf"
                 }
+                */
 			});
 			$('.datatable').each(function(){
 				var datatable = $(this);
@@ -160,9 +177,39 @@ $stats = App::getStats();;
 				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
 				length_sel.addClass('form-control input-sm');
 			});
-            $('#startDate').datepicker({format:'yyyy-mm-dd'});
-            $('#endDate').datepicker({format:'yyyy-mm-dd'})
+            $('#DataTables_Table_0_filter input').attr("placeholder", "ค้นหาละเอียดอีกครั้ง");
+            $('#startDate').datepicker({format:'dd/mm/yyyy'});
+            $('#endDate').datepicker({format:'dd/mm/yyyy'});
 
+            function calculateStats(){
+                var rows = oTable._('tr', {"filter":"applied"});
+                console.log(rows);
+                var total = 0;
+                var length = rows.length;
+                var min = 99999999999999;
+                var max = 0;
+                $(rows).each(function(index, el){
+                    var val = parseInt(el[4]);
+                    total += val;
+                    if(val<min){
+                        min = val;
+                    }
+                    if(val>max){
+                        max = val;
+                    }
+                });
+
+                var avg = parseInt(total/length);
+                $('.stat-avg').text(avg);
+                $('.stat-min').text(min);
+                $('.stat-max').text(max);
+            }
+            calculateStats();
+
+            $('.stat-calculate').click(function(e){
+                e.preventDefault();
+                calculateStats();
+            });
         });
 		</script>
 	</body>

@@ -7,6 +7,11 @@
  * To change this template use File | Settings | File Templates.
  */
 include_once "App.php";
+if(!App::isLogin()){
+    header("location: index.php");
+    exit();
+}
+
 $user = App::getUser();
 $input = isset($_GET)? $_GET: null;
 
@@ -29,7 +34,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         if(!in_array($ext, $allowed)){
             throw new Exception("File upload allowed only excel file(xls,xlsx)");
         }
-        App::importDrug($file["tmp_name"], time().'.'.$ext);
+        App::importDrug($file["tmp_name"], time().'.'.$ext, $user["iduser"]);
         header("location: index.php");
         App::db()->commit();
         exit();
@@ -88,14 +93,14 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 </nav>
 <div class="jumbotron">
     <div class="container" >
+        <div class="text-center">
+            ดาวโหลด ไฟล์ตาราง Excel ที่นี่ : <a href="demo.xlsx"> download</a>
+        </div>
         <form class="form-inline text-center" role="form" method="post" enctype="multipart/form-data">
+            <div class="clearfix"></div>
             <div class="form-group">
-                <label class="sr-only">Excel file</label>
-                Demo File : <a href="demo.xlsx"> download</a>
-            </div>
-            <div class="form-group">
-                <label class="sr-only">Excel file</label>
-                <input type="file" class="form-control" name="excel_doc" placeholder="Excel file">
+                <span class="" style="display: inline-block; font-size: 16px;">อัพโหลดตารางไฟล์</span>
+                <input type="file" class="form-control" name="excel_doc" placeholder="Excel file" style="width: 200px;">
             </div>
             <button type="submit" class="btn btn-default">upload</button>
         </form>

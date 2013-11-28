@@ -3,7 +3,7 @@
  * Created by JetBrains PhpStorm.
  * User: Nuiz
  * Date: 28/11/2556
- * Time: 6:07 น.
+ * Time: 6:20 น.
  * To change this template use File | Settings | File Templates.
  */
 
@@ -12,8 +12,6 @@ if(!App::isAdmin()){
     header("location: ../index.php");
 }
 
-if(!App::addUser($_POST)){
-    header("location: index.php");
-}
-header("location: index.php#userList");
+App::updateHospital($_GET["id"], $_POST);
+header("location: index.php#hospital");
 exit();

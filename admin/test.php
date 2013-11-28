@@ -8,4 +8,10 @@
  */
 
 include_once("../App.php");
-App::importDrug("1.xlsx");
+$pdo = App::db();
+$pdo->beginTransaction();
+$st = $pdo->prepare("INSERT INTO hospital(hospital_name) VALUES('test')");
+$st->execute();
+$st->execute();
+$st->execute();
+$pdo->rollBack();
