@@ -28,7 +28,7 @@ CREATE TABLE `hospital` (
   `idhospital` int(11) NOT NULL AUTO_INCREMENT,
   `hospital_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`idhospital`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,6 +37,7 @@ CREATE TABLE `hospital` (
 
 LOCK TABLES `hospital` WRITE;
 /*!40000 ALTER TABLE `hospital` DISABLE KEYS */;
+INSERT INTO `hospital` VALUES (1,'cm hop'),(2,'ดอยสะเก็ด'),(3,'ดอยหล่อ');
 /*!40000 ALTER TABLE `hospital` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-11-27 13:37:55
+-- Dump completed on 2013-11-28 11:48:32
