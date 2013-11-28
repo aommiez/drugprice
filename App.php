@@ -16,11 +16,7 @@ class App {
     protected static $_db = null, $_hospitals = null;
     public static function db(){
         if(is_null(self::$_db)){
-<<<<<<< HEAD
             self::$_db = new PDO('mysql:host=localhost;dbname=drugprice;charset=UTF8', 'root', '');
-=======
-            self::$_db = new PDO('mysql:host=localhost;dbname=drugprice;charset=utf8', 'root', '111111');
->>>>>>> 06bae461df0d8bd6a564063b1524493c9e708d20
         }
         return self::$_db;
     }
