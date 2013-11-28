@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         $explodeName = explode(".", $name);
         $ext = array_pop($explodeName);
         $allowed = array("xls", "xlsx");
-        if(in_array($allowed, $ext)){
+        if(!in_array($ext, $allowed)){
             throw new Exception("File upload allowed only excel file(xls,xlsx)");
         }
         App::importDrug($file["tmp_name"], time().'.'.$ext);
