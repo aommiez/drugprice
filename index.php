@@ -110,7 +110,7 @@ $hospitals = App::hospitals();
 					<tbody>
                         <?php foreach($drugs as $key=> $value){?>
                             <tr class="gradeX">
-                                <td><?php echo $value["date_start"];?></td>
+                                <td><?php $dateTime = new DateTime($value["date_start"]); echo $dateTime->format("d/m/y");?></td>
                                 <td><?php echo $value["name"];?></td>
                                 <td><?php echo $value["content"];?></td>
                                 <td><?php echo $value["company"];?></td>

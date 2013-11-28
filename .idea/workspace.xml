@@ -3,17 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="e0adf94f-d7a3-4809-9133-32455c7abb5f" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App.php" afterPath="$PROJECT_DIR$/App.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/upload.php" afterPath="$PROJECT_DIR$/upload.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="drugprice.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385613553178" ignored="false" />
+    <file path="/Dummy.txt" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385614080777" ignored="false" />
     <file path="/Application.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385589502446" ignored="false" />
-    <file path="/App.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385594474267" ignored="false" />
+    <file path="/App.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385614604369" ignored="false" />
     <file path="/test.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385582937919" ignored="false" />
     <file path="/drugprice_drug.sql" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385582637033" ignored="false" />
-    <file path="/index.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385595736186" ignored="false" />
+    <file path="/index.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385614495347" ignored="false" />
     <file path="/login.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385589407048" ignored="false" />
     <file path="/logout.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385589662456" ignored="false" />
     <file path="/uplaod.php" changelist="e0adf94f-d7a3-4809-9133-32455c7abb5f" time="1385592398870" ignored="false" />
@@ -39,10 +39,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="index.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="131" column="73" selection-start="6116" selection-end="6116" vertical-scroll-proportion="-0.65384614">
+            <state line="116" column="70" selection-start="5608" selection-end="5608" vertical-scroll-proportion="0.6899696">
               <folding />
             </state>
           </provider>
@@ -84,10 +84,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="upload.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="upload.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/upload.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="4" selection-start="4" selection-end="4" vertical-scroll-proportion="0.0">
+            <state line="0" column="4" selection-start="4" selection-end="4" vertical-scroll-proportion="-0.0">
               <folding />
             </state>
           </provider>
@@ -105,7 +105,7 @@
       <file leaf-file-name="App.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/App.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="83" selection-start="542" selection-end="542" vertical-scroll-proportion="-7.8461537">
+            <state line="212" column="46" selection-start="8141" selection-end="8141" vertical-scroll-proportion="-17.0">
               <folding />
             </state>
           </provider>
@@ -151,9 +151,9 @@
         <option value="$PROJECT_DIR$/admin/add_hospital.php" />
         <option value="$PROJECT_DIR$/admin/add_user.php" />
         <option value="$PROJECT_DIR$/admin/index.php" />
+        <option value="$PROJECT_DIR$/upload.php" />
         <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/App.php" />
-        <option value="$PROJECT_DIR$/upload.php" />
       </list>
     </option>
   </component>
@@ -286,20 +286,26 @@
       <created>1385452855420</created>
       <updated>1385452855420</updated>
     </task>
+    <task id="LOCAL-00001" summary="fix bug upload">
+      <created>1385614085537</created>
+      <updated>1385614085537</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32879046" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23181818" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23181818" sideWeight="0.6712095" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32879046" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -354,7 +360,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix bug upload" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -368,6 +374,7 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
+    <MESSAGE value="fix bug upload" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -459,23 +466,23 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
+    <entry file="file://$PROJECT_DIR$/upload.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="131" column="73" selection-start="6116" selection-end="6116" vertical-scroll-proportion="-0.65384614">
+        <state line="0" column="4" selection-start="4" selection-end="4" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/App.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="83" selection-start="542" selection-end="542" vertical-scroll-proportion="-7.8461537">
+        <state line="212" column="46" selection-start="8141" selection-end="8141" vertical-scroll-proportion="-17.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/upload.php">
+    <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="4" selection-start="4" selection-end="4" vertical-scroll-proportion="0.0">
+        <state line="116" column="70" selection-start="5608" selection-end="5608" vertical-scroll-proportion="0.6899696">
           <folding />
         </state>
       </provider>

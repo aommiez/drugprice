@@ -17,6 +17,8 @@ class App {
     public static function db(){
         if(is_null(self::$_db)){
             self::$_db = new PDO('mysql:host=localhost;dbname=drugprice;charset=utf8', 'root', '111111');
+            self::$_db->query("SET character_set_client=utf8");
+            self::$_db->query("SET character_set_connection=utf8");
         }
         return self::$_db;
     }
