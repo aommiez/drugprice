@@ -232,4 +232,10 @@ class App {
         }
         return true;
     }
+
+    public static function getStats(){
+        $pdo = self::db();
+        $result = $pdo->query("SELECT AVG(price) as avg, MIN(price) as min, MAX(price) as max FROM drug");
+        return $result->fetch(PDO::FETCH_ASSOC);
+    }
 }

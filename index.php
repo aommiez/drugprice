@@ -4,6 +4,8 @@ $user = App::getUser();
 $input = isset($_GET)? $_GET: null;
 $drugs = App::allDrug($input);
 $hospitals = App::hospitals();
+
+$stats = App::getStats();;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,9 +86,11 @@ $hospitals = App::hospitals();
                 <button type="submit" class="btn btn-default">ค้นหา</button>
             </form>
             <hr>
-            <!--
-            xxxx
-            -->
+            <div>
+                <div>avg: <?php echo $stats["avg"];?></div>
+                <div>min: <?php echo $stats["min"];?></div>
+                <div>max: <?php echo $stats["max"];?></div>
+            </div>
 
         </div>
     </div>
