@@ -16,8 +16,8 @@ class App {
     protected static $_db = null, $_hospitals = null;
     public static function db(){
         if(is_null(self::$_db)){
-            //self::$_db = new PDO('mysql:host=localhost;dbname=admin_drugprice;charset=utf8', 'admin_drugprice', '111111');
-            self::$_db = new PDO('mysql:host=localhost;dbname=drugprice;charset=utf8', 'root', '111111');
+            self::$_db = new PDO('mysql:host=localhost;dbname=admin_drugprice;charset=utf8', 'admin_drugprice', '111111');
+            //self::$_db = new PDO('mysql:host=localhost;dbname=drugprice;charset=utf8', 'root', '111111');
             self::$_db->query("SET character_set_client=utf8");
             self::$_db->query("SET character_set_connection=utf8");
         }
@@ -79,22 +79,24 @@ class App {
             }
             if(isset($input["date_start"]) && !empty($input["date_start"])){
                 $where[] = "date_start>=:date_start";
-                $buffer = new DateTime($input["date_start"]);
+                $buffer = new DateTime(str_replace("/", "-", $input["date_start"]));
                 $param["date_start"] = $buffer->format("Y-m-d");
             }
             if(isset($input["date_end"]) && !empty($input["date_end"])){
-                $where[] = "date_end<=:date_end";
-                $buffer = new DateTime($input["date_end"]);
+                $where[] = "date_start<=:date_end";
+                $buffer = new DateTime(str_replace("/", "-", $input["date_end"]));
                 $param["date_end"] = $buffer->format("Y-m-d");
             }
             if(isset($input["name"]) && !empty($input["name"])){
                 $where[] = "name LIKE :name";
                 $param["name"] = '%'.str_replace(" ", "%", $input["name"]).'%';
             }
+            /*
             if(isset($input["total_money"]) && !empty($input["total_money"])){
                 $where[] = "CAST(total_money as DECIMAL(10,2))>=CAST(:total_money as DECIMAL(10,2))";
                 $param["total_money"] = $input["total_money"];
             }
+            */
 
             if(count($where)>0){
                 $sql .= " WHERE ".implode(" AND ", $where);
@@ -265,23 +267,24 @@ class App {
             }
             if(isset($input["date_start"]) && !empty($input["date_start"])){
                 $where[] = "date_start>=:date_start";
-                $buffer = new DateTime($input["date_start"]);
+                $buffer = new DateTime(str_replace("/", "-", $input["date_start"]));
                 $param["date_start"] = $buffer->format("Y-m-d");
             }
             if(isset($input["date_end"]) && !empty($input["date_end"])){
-                $where[] = "date_end<=:date_end";
-                $buffer = new DateTime($input["date_end"]);
+                $where[] = "date_start<=:date_end";
+                $buffer = new DateTime(str_replace("/", "-", $input["date_end"]));
                 $param["date_end"] = $buffer->format("Y-m-d");
             }
             if(isset($input["name"]) && !empty($input["name"])){
                 $where[] = "name LIKE :name";
                 $param["name"] = '%'.str_replace(" ", "%", $input["name"]).'%';
             }
+            /*
             if(isset($input["total_money"]) && !empty($input["total_money"])){
                 $where[] = "CAST(total_money as DECIMAL(10,2))>=CAST(:total_money as DECIMAL(10,2))";
                 $param["total_money"] = $input["total_money"];
             }
-
+            */
             if(count($where)>0){
                 $sql .= " WHERE ".implode(" AND ", $where);
             }

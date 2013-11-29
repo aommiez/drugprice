@@ -122,9 +122,20 @@ $hospitals = App::hospitals();
 						</tr>
 					</thead>
 					<tbody>
-                        <?php foreach($drugs as $key=> $value){?>
-                            <tr class="gradeX">
-                                <td><?php $dateTime = new DateTime($value["date_start"]); echo $dateTime->format("d/m/y");?></td>
+                        <?php
+                            foreach($drugs as $key=> $value){
+                                $trClass = "";
+                                if(isset($_GET["total_money"]) && (int)$_GET["total_money"]!=0){
+                                    if((int)$_GET["total_money"] > (int)$value["total_money"]){
+                                        $trClass = "danger";
+                                    }
+                                    if((int)$_GET["total_money"] < (int)$value["total_money"]){
+                                        $trClass = "success";
+                                    }
+                                }
+                            ?>
+                            <tr class="gradeX <?php echo $trClass;?>">
+                                <td><?php $dateTime = new DateTime($value["date_start"]); echo $dateTime->format("d/m/Y");?></td>
                                 <td><?php echo $value["name"];?></td>
                                 <td><?php echo $value["content"];?></td>
                                 <td><?php echo $value["company"];?></td>
@@ -199,7 +210,9 @@ $hospitals = App::hospitals();
                     }
                 });
 
+                if(min == 99999999999999) min = 0;
                 var avg = parseInt(total/length);
+                if(isNaN(avg)) avg = 0;
                 $('.stat-avg').text(avg);
                 $('.stat-min').text(min);
                 $('.stat-max').text(max);
