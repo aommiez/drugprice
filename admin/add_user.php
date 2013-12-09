@@ -13,7 +13,7 @@ if(!App::isAdmin()){
 }
 
 if(!App::addUser($_POST)){
-
+    header("location: index.php");
 }
-header("location: index.php");
+header("location: index.php#userList");
 exit();

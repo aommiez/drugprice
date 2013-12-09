@@ -1,8 +1,30 @@
 <?php
 include_once "App.php";
 $user = App::getUser();
-$input = isset($_GET)? $_GET: null;
+$input = array();
+if(!empty($_GET["date_start"])){
+    $ex = explode("/", $_GET["date_start"]);
+    $input["date_start"] = $ex[2]."-".$ex[1]."-".$ex[0];
+}
+if(!empty($_GET["date_end"])){
+    $ex = explode("/", $_GET["date_end"]);
+    $input["date_end"] = $ex[2]."-".$ex[1]."-".$ex[0];
+}
+if(!empty($_GET["hospitalId"])){
+    $input["hospitalId"] = $_GET["hospitalId"];
+}
+if(!empty($_GET["total_money"])){
+    $input["total_money"] = $_GET["total_money"];
+}
+if(!empty($_GET["name"])){
+    $input["name"] = $_GET["name"];
+}
+
+if(count($input)==0){
+    $input = null;
+}
 $drugs = App::allDrug($input);
+$stats = App::getStats($input);;
 $hospitals = App::hospitals();
 ?>
 <!DOCTYPE html>
@@ -59,9 +81,12 @@ $hospitals = App::hospitals();
                 <div class="form-group">
                     <label class="sr-only" for="hospitalName">Hospital</label>
                     <select class="form-control" id="hospitalName" name="hospitalId">
-                        <option>ชื่อโรงพยาบาล</option>
+                        <option value="">ทั้งหมด</option>
                         <?php foreach($hospitals as $key =>$value){?>
-                            <option value="<?php echo $value["idhospital"];?>"><?php echo $value["hospital_name"];?></option>
+                            <option value="<?php echo $value["idhospital"];?>"
+                                <?php if(isset($_GET["hospitalId"]) && $_GET["hospitalId"]==$value["idhospital"]) echo "selected"; ?>>
+                                <?php echo $value["hospital_name"];?>
+                            </option>
                         <?php }?>
                     </select>
                 </div>
@@ -84,10 +109,14 @@ $hospitals = App::hospitals();
                 <button type="submit" class="btn btn-default">ค้นหา</button>
             </form>
             <hr>
-            <!--
-            xxxx
-            -->
-
+            <div style="font-size: 18px;">
+                <span style="padding: 0 20px;">max: <span class="stat-max"><?php //echo $stats["max"];?></span></span>
+                <span style="padding: 0 20px 0 0;">avg: <span class="stat-avg"><?php //echo $stats["avg"];?></span></span>
+                <span style="padding: 0 20px;">min: <span class="stat-min"><?php //echo $stats["min"];?></span></span>
+                <!--
+                <span style="padding: 0 20px;"><button class="btn btn-default stat-calculate">Calculate</button></span>
+                -->
+            </div>
         </div>
     </div>
 		<div id="wrap">
@@ -98,27 +127,36 @@ $hospitals = App::hospitals();
 							<th>วัน เดือน ปี</th>
 							<th>ชื่อยา</th>
 							<th>ขนาด</th>
-							<th>บริษัท</th>
+							<th>vendor code</th>
 							<th>ราคา/หน่วย</th>
                             <th>ขนาดบรรจุ</th>
                             <th>ปริมาณ</th>
                             <th>ราคาสุทธิ</th>
-                            <th>วิธีการจัดซื้อ</th>
                             <th>โรงพยาบาล</th>
 						</tr>
 					</thead>
 					<tbody>
-                        <?php foreach($drugs as $key=> $value){?>
-                            <tr class="gradeX">
-                                <td><?php echo $value["date_start"];?></td>
-                                <td><?php echo $value["name"];?></td>
-                                <td><?php echo $value["content"];?></td>
-                                <td><?php echo $value["company"];?></td>
-                                <td><?php echo $value["price"];?></td>
-                                <td><?php echo $value["size"];?></td>
-                                <td><?php echo $value["qtc"];?></td>
+                        <?php
+                            foreach($drugs as $key=> $value){
+                                $trClass = "";
+                                if(isset($_GET["total_money"]) && (int)$_GET["total_money"]!=0){
+                                    if((int)$_GET["total_money"] > (int)$value["total_money"]){
+                                        $trClass = "danger";
+                                    }
+                                    if((int)$_GET["total_money"] < (int)$value["total_money"]){
+                                        $trClass = "success";
+                                    }
+                                }
+                            ?>
+                            <tr class="gradeX <?php echo $trClass;?>">
+                                <td><?php $dateTime = new DateTime($value["date_start"]); echo $dateTime->format("d/m/Y");?></td>
+                                <td><?php echo $value["Text76"];?></td>
+                                <td><?php echo $value["NAME"];?></td>
+                                <td><?php echo $value["CONTENT"];?></td>
+                                <td class="price-field"><?php echo $value["price"];?></td>
+                                <td><?php echo $value["pack"];?></td>
+                                <td><?php echo $value["qty"];?></td>
                                 <td><?php echo $value["total_money"];?></td>
-                                <td><?php echo $value["budget_type"];?></td>
                                 <td><?php echo $value["hospital_name"];?></td>
                             </tr>
                         <?php }?>
@@ -129,22 +167,29 @@ $hospitals = App::hospitals();
 
 		</div>
 
-        <link rel="stylesheet" type="text/css" href="css/TableTools.css">
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/datatables/1.9.4/jquery.dataTables.min.js"></script>
         <script src="js/datatables.js"></script>
+        <!--
         <script src="js/TableTools.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/TableTools.css">
+        -->
         <script src="js/bootstrap-datepicker.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function() {
-			$('.datatable').dataTable({
+			var oTable = $('.datatable').dataTable({
 				"sPaginationType": "bs_full",
+                "aLengthMenu": [[200],[200]],
+                "iDisplayLength": 200,
                 "aaSorting": [ [0,'asc'], [1,'asc'] ],
                 "sDom": 'T<"clear">lfrtip',
+                "bFilter": false
+                /*,
                 "oTableTools": {
                     "sSwfPath": "media/swf/copy_csv_xls_pdf.swf"
                 }
+                */
 			});
 			$('.datatable').each(function(){
 				var datatable = $(this);
@@ -156,9 +201,56 @@ $hospitals = App::hospitals();
 				var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
 				length_sel.addClass('form-control input-sm');
 			});
-            $('#startDate').datepicker({format:'yyyy-mm-dd'});
-            $('#endDate').datepicker({format:'yyyy-mm-dd'})
+            $('#DataTables_Table_0_filter input').attr("placeholder", "ค้นหาละเอียดอีกครั้ง");
+            $('#startDate').datepicker({format:'dd/mm/yyyy'});
+            $('#endDate').datepicker({format:'dd/mm/yyyy'});
 
+            function calculateStats(){
+                var rows = oTable._('tr', {"filter":"applied"});
+                console.log(rows);
+                var total = 0;
+                var length = rows.length;
+                var min = 99999999999999;
+                var max = 0;
+                $(rows).each(function(index, el){
+                    var val = parseInt(el[4]);
+                    total += val;
+                    if(val<min){
+                        min = val;
+                    }
+                    if(val>max){
+                        max = val;
+                    }
+                });
+
+                if(min == 99999999999999) min = 0;
+                var avg = parseInt(total/length);
+                if(isNaN(avg)) avg = 0;
+                $('.stat-avg').text(avg);
+                $('.stat-min').text(min);
+                $('.stat-max').text(max);
+
+                var trRow = $('.datatable tr');
+                $(trRow).each(function(index, el){
+                    var val = parseInt($(".price-field", el).text());
+                    el.removeClass("danger").removeClass("success").removeClass("warning");
+                    if(val<avg){
+                        $(el).addClass("success");
+                    }
+                    else if(val>avg){
+                        $(el).addClass("danger");
+                    }
+                    else {
+                        $(el).addClass("warning");
+                    }
+                });
+            }
+            calculateStats();
+
+            $('.stat-calculate').click(function(e){
+                e.preventDefault();
+                calculateStats();
+            });
         });
 		</script>
 	</body>
