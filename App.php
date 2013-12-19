@@ -16,8 +16,8 @@ class App {
     protected static $_db = null, $_hospitals = null;
     public static function db(){
         if(is_null(self::$_db)){
-            //self::$_db = new PDO('mysql:host=localhost;dbname=admin_drugprice;charset=utf8', 'admin_drugprice', '111111');
-            self::$_db = new PDO('mysql:host=localhost;dbname=drugprice;charset=utf8', 'root', '111111');
+            self::$_db = new PDO('mysql:host=localhost;dbname=admin_drugprice;charset=utf8', 'admin_drugprice', '111111');
+            //self::$_db = new PDO('mysql:host=localhost;dbname=drugprice;charset=utf8', 'root', '111111');
             self::$_db->query("SET character_set_client=utf8");
             self::$_db->query("SET character_set_connection=utf8");
         }
@@ -70,37 +70,9 @@ class App {
         $pdo = self::db();
         if(!is_null($input) && count($input)>0){
             $sql = "SELECT * FROM drug";
-            $where = array();
+
             $param = array();
-
-            if(isset($input["hospitalId"]) && !empty($input["hospitalId"])){
-                $where[] = "hospitalId=:hospitalId";
-                $param["hospitalId"] = $input["hospitalId"];
-            }
-            if(isset($input["date_start"]) && !empty($input["date_start"])){
-                $where[] = "date_start>=:date_start";
-                $buffer = new DateTime(str_replace("/", "-", $input["date_start"]));
-                $param["date_start"] = $buffer->format("Y-m-d");
-            }
-            if(isset($input["date_end"]) && !empty($input["date_end"])){
-                $where[] = "date_start<=:date_end";
-                $buffer = new DateTime(str_replace("/", "-", $input["date_end"]));
-                $param["date_end"] = $buffer->format("Y-m-d");
-            }
-            if(isset($input["name"]) && !empty($input["name"])){
-                $where[] = "name LIKE :name";
-                $param["name"] = '%'.str_replace(" ", "%", $input["name"]).'%';
-            }
-            /*
-            if(isset($input["total_money"]) && !empty($input["total_money"])){
-                $where[] = "CAST(total_money as DECIMAL(10,2))>=CAST(:total_money as DECIMAL(10,2))";
-                $param["total_money"] = $input["total_money"];
-            }
-            */
-
-            if(count($where)>0){
-                $sql .= " WHERE ".implode(" AND ", $where);
-            }
+            $sql .= self::buildSearchQuery($input, $param);
             
             $st = $pdo->prepare($sql);
             $result = $st->execute($param);
@@ -123,7 +95,43 @@ class App {
     }
 
     public static function importDrug($path, $name, $hospitalId, $userId = 0){
-        $extension = pathinfo($name, PATHINFO_EXTENSION);
+        move_uploaded_file($path, "docs/".$name);
+        $pdo = self::db();
+        $now = date("Y-m-d H:i:s");
+        $pdo->query("INSERT INTO drug_xls(created_at, filename, hospitalId, userId) VALUES('{$now}','{$name}','{$hospitalId}','{$userId}')");
+        $xls_pdo = $pdo->query("SELECT * FROM drug_xls WHERE filename='{$name}'");
+        $xls = $xls_pdo->fetch(PDO::FETCH_ASSOC);
+        $xls_id = $xls['id'];
+
+        $data = self::excelToData("docs/".$name);
+        foreach ($data as $key => $value) {
+            $value2 = array(
+                "userId"=> $userId,
+                "hospitalId"=> $hospitalId,
+                "xlsId"=> $xls_id,
+            );
+            $value2["total_money"] = (int)$value["price"]*(int)$value["qty"];
+            $data[$key] = array_merge($value, $value2);
+        }
+        $columns = array('Text76', 'dt1', 'dt2', 'CODE1','NAME','TYPE','CONTENT','qty','pack','price','expdate','Text50', 'inv_no','VendorCode','receive_date','total_money','budgget','receive_header','Text2','userId','hospitalId','xlsId');
+        $column_list = join(',', $columns);
+        $param_list = join(',', array_map(function($col) { return ":$col"; }, $columns));
+        $sql = "INSERT INTO `drug` ({$column_list}) VALUES ({$param_list})";
+        $statement = $pdo->prepare($sql);
+        if ($statement === false) {
+            die(print_r($pdo->errorInfo(), true));
+        }
+        foreach($data as $key => $value){
+            $param_values = array_intersect_key($value, array_flip($columns));
+            $status = $statement->execute($param_values);
+            if ($status === false) {
+                die(print_r($statement->errorInfo(), true));
+            }
+        }
+    }
+
+    public static function excelToData($path){
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
         if($extension=='xls') {
             $objReader = PHPExcel_IOFactory::createReader('Excel5');
         }
@@ -145,10 +153,10 @@ class App {
             $r = array("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
             $buff = str_replace($s, $r, $date);
             $d = explode(" ", $buff);
-            if($d[2] > 2500){
-                $d[2] -= 543;
+            if(@$d[2] > 2500){
+                @$d[2] -= 543;
             }
-            $result = $d[2]."-".sprintf("%02s", $d[1])."-".sprintf("%02s", $d[0]);
+            $result = @$d[2]."-".sprintf("%02s", @$d[1])."-".sprintf("%02s", @$d[0]);
             return $result;
         };
 
@@ -177,16 +185,17 @@ class App {
             $objWorksheet->getStyleByColumnAndRow(2, $row)
                 ->getNumberFormat()
                 ->setFormatCode("yy-mm-dd");
-            */
 
             $dateImport = $fnDate($objWorksheet->getCellByColumnAndRow(0, $row)->getValue());
             $dateStart = $fnDate($objWorksheet->getCellByColumnAndRow(1, $row)->getValue());
             $dateEnd = $fnDate($objWorksheet->getCellByColumnAndRow(2, $row)->getValue());
+            */
 
-            $data[] = array(
-                "Text76"=> $dateImport,
-                "dt1"=> $dateStart,
-                "dt2"=> $dateEnd,
+
+            $value = array(
+                "Text76"=> date("Y-m-d", (($objWorksheet->getCellByColumnAndRow(0, $row)->getValue()-25569) * 86400)),
+                "dt1"=> date("Y-m-d", (($objWorksheet->getCellByColumnAndRow(1, $row)->getValue()-25569) * 86400)),
+                "dt2"=> date("Y-m-d", (($objWorksheet->getCellByColumnAndRow(2, $row)->getValue()-25569) * 86400)),
                 "CODE1"=> $objWorksheet->getCellByColumnAndRow(3, $row)->getValue(),
                 "NAME"=> $objWorksheet->getCellByColumnAndRow(4, $row)->getValue(),
                 "TYPE"=> $objWorksheet->getCellByColumnAndRow(5, $row)->getValue(),
@@ -198,35 +207,16 @@ class App {
                 "Text50"=> $objWorksheet->getCellByColumnAndRow(11, $row)->getValue(),
                 "inv_no"=> $objWorksheet->getCellByColumnAndRow(12, $row)->getValue(),
                 "VendorCode"=> $objWorksheet->getCellByColumnAndRow(13, $row)->getValue(),
-                "receive_date"=> (string)$objWorksheet->getCellByColumnAndRow(14, $row)->getValue(),
+                "receive_date"=> date("Y-m-d", (($objWorksheet->getCellByColumnAndRow(14, $row)->getValue()-25569) * 86400)),
                 "total_money"=> (string)$objWorksheet->getCellByColumnAndRow(15, $row)->getValue(),
                 "budgget"=> $objWorksheet->getCellByColumnAndRow(16, $row)->getValue(),
                 "receive_header"=> $objWorksheet->getCellByColumnAndRow(17, $row)->getValue(),
-                "Text2"=> $objWorksheet->getCellByColumnAndRow(18, $row)->getValue(),
-                "userId"=> $userId,
-                "hospitalId"=> $hospitalId
+                "Text2"=> $objWorksheet->getCellByColumnAndRow(18, $row)->getValue()
             );
+            //$value["total_money"] = (int)$value["price"]*(int)$value["qty"];
+            $data[] = $value;
         }
-
-        $pdo = self::db();
-        $columns = array('Text76', 'dt1','dt2','date_end','CODE1','NAME','TYPE','CONTENT','qty','pack','price','expdate','Text50', 'inv_no','VendorCode','receive_date','total_money','budgget','receive_header','Text2','userId','hospitalId');
-        $column_list = join(',', $columns);
-        $param_list = join(',', array_map(function($col) { return ":$col"; }, $columns));
-        $sql = "INSERT INTO `drug` ({$column_list}) VALUES ({$param_list})";
-        $statement = $pdo->prepare($sql);
-        if ($statement === false) {
-            die(print_r($pdo->errorInfo(), true));
-        }
-        foreach($data as $key => $value){
-            $param_values = array_intersect_key($value, array_flip($columns));
-            var_dump($param_values);
-            $status = $statement->execute($param_values);
-            if ($status === false) {
-                die(print_r($statement->errorInfo(), true));
-            }
-        }
-
-        move_uploaded_file($path, "docs/".$name);
+        return $data;
     }
 
     public static function getHospitalId($name){
@@ -309,36 +299,9 @@ class App {
         $pdo = self::db();
         if(!is_null($input) && count($input)>0){
             $sql = "SELECT AVG(CAST(price as DECIMAL(10))) as avg, MIN(CAST(price as DECIMAL(10))) as min, MAX(CAST(price as DECIMAL(10))) as max FROM drug";
-            $where = array();
             $param = array();
+            $sql .= self::buildSearchQuery($input, $param);
 
-            if(isset($input["hospitalId"]) && !empty($input["hospitalId"])){
-                $where[] = "hospitalId=:hospitalId";
-                $param["hospitalId"] = $input["hospitalId"];
-            }
-            if(isset($input["date_start"]) && !empty($input["date_start"])){
-                $where[] = "date_start>=:date_start";
-                $buffer = new DateTime(str_replace("/", "-", $input["date_start"]));
-                $param["date_start"] = $buffer->format("Y-m-d");
-            }
-            if(isset($input["date_end"]) && !empty($input["date_end"])){
-                $where[] = "date_start<=:date_end";
-                $buffer = new DateTime(str_replace("/", "-", $input["date_end"]));
-                $param["date_end"] = $buffer->format("Y-m-d");
-            }
-            if(isset($input["name"]) && !empty($input["name"])){
-                $where[] = "name LIKE :name";
-                $param["name"] = '%'.str_replace(" ", "%", $input["name"]).'%';
-            }
-            /*
-            if(isset($input["total_money"]) && !empty($input["total_money"])){
-                $where[] = "CAST(total_money as DECIMAL(10,2))>=CAST(:total_money as DECIMAL(10,2))";
-                $param["total_money"] = $input["total_money"];
-            }
-            */
-            if(count($where)>0){
-                $sql .= " WHERE ".implode(" AND ", $where);
-            }
             $st = $pdo->prepare($sql);
             $result = $st->execute($param);
             if(!$result){
@@ -430,5 +393,105 @@ class App {
             $errorInfo = $st->errorInfo();
             throw new Exception($errorInfo[2]);
         }
+    }
+
+    public static function auto_complete($field, $value){
+        $pdo = self::db();
+        $query = "SELECT DISTINCT({$field}) as a FROM drug WHERE {$field} LIKE '%{$value}%'";
+        $result = $pdo->query($query);
+        return $result->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getUploadHistory($userId){
+        $pdo = self::db();
+        $query = "SELECT * FROM drug_xls";
+        if($userId != 1){
+            $query .= "WHERE userId='{$userId}'";
+        }
+        $result = $pdo->query($query);
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        foreach($data as $key=> $value){
+            $data[$key]["hospital_name"] = self::getHospitalName($value["hospitalId"]);
+        }
+        return $data;
+    }
+
+    public static function getHistoryData($id){
+        $pdo = self::db();
+        $query = "SELECT * FROM drug WHERE xlsId='{$id}'";
+        $result = $pdo->query($query);
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
+    }
+
+    public static function deleteHistoryData($id){
+        $pdo = self::db();
+        $query = "SELECT * FROM drug_xls WHERE id='{$id}' LIMIT 1";
+        $result = $pdo->query($query);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+
+        $query = "DELETE FROM drug WHERE xlsId='{$id}'";
+        $result = $pdo->query($query);
+
+        $query = "DELETE FROM drug_xls WHERE id='{$id}'";
+        $result = $pdo->query($query);
+
+        @unlink("docs/".$row["filename"]);
+    }
+
+    public static function buildSearchQuery($input, &$param = array()){
+        $where = array();
+
+        if(isset($input["hospitalId"]) && !empty($input["hospitalId"])){
+            $where[] = "hospitalId=:hospitalId";
+            $param["hospitalId"] = $input["hospitalId"];
+        }
+        if(isset($input["receive_date"]) && !empty($input["receive_date"])){
+            $where[] = "receive_date=:receive_date";
+            $param["receive_date"] = $input["receive_date"];
+        }
+        if(isset($input["NAME"]) && !empty($input["NAME"])){
+            $where[] = "NAME LIKE :NAME";
+            $param["NAME"] = "%".$input["NAME"]."%";
+        }
+        if(isset($input["CONTENT"]) && !empty($input["CONTENT"])){
+            $where[] = "CONTENT=:CONTENT";
+            $param["CONTENT"] = $input["CONTENT"];
+        }
+
+        if(isset($input["TYPE"]) && !empty($input["TYPE"])){
+            $where[] = "TYPE=:TYPE";
+            $param["TYPE"] = $input["TYPE"];
+        }
+
+        if(isset($input["PACK"]) && !empty($input["PACK"])){
+            $where[] = "PACK=:PACK";
+            $param["PACK"] = $input["PACK"];
+        }
+
+        if(isset($input["PRICE"]) && !empty($input["PRICE"])){
+            $where[] = "PRICE=:PRICE";
+            $param["PRICE"] = $input["PRICE"];
+        }
+
+        if(isset($input["qty"]) && !empty($input["qty"])){
+            $where[] = "qty=:qty";
+            $param["qty"] = $input["qty"];
+        }
+
+        if(isset($input["total_money"]) && !empty($input["total_money"])){
+            $where[] = "(CAST(price AS SIGNED) * CAST(qty AS SIGNED))>=:total_money";
+            $param["total_money"] = $input["total_money"];
+        }
+
+        if(isset($input["VendorCode"]) && !empty($input["VendorCode"])){
+            $where[] = "VendorCode=:VendorCode";
+            $param["VendorCode"] = $input["VendorCode"];
+        }
+
+        if(count($where)>0){
+            return " WHERE ".implode(" AND ", $where);
+        }
+        return "";
     }
 }

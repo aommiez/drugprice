@@ -2,30 +2,47 @@
 include_once "App.php";
 $user = App::getUser();
 $input = array();
-if(!empty($_GET["date_start"])){
-    $ex = explode("/", $_GET["date_start"]);
-    $input["date_start"] = $ex[2]."-".$ex[1]."-".$ex[0];
+foreach($_GET as $key=>$value){
+    if(!empty($value)){
+        $input[$key] = $value;
+    }
 }
-if(!empty($_GET["date_end"])){
-    $ex = explode("/", $_GET["date_end"]);
-    $input["date_end"] = $ex[2]."-".$ex[1]."-".$ex[0];
+if(!empty($input["receive_date"])){
+    $ex = explode("/", $input["receive_date"]);
+    $input["receive_date"] = $ex[2]."-".$ex[1]."-".$ex[0];
 }
-if(!empty($_GET["hospitalId"])){
-    $input["hospitalId"] = $_GET["hospitalId"];
-}
-if(!empty($_GET["total_money"])){
-    $input["total_money"] = $_GET["total_money"];
-}
-if(!empty($_GET["name"])){
-    $input["name"] = $_GET["name"];
-}
-
 if(count($input)==0){
     $input = null;
 }
 $drugs = App::allDrug($input);
-$stats = App::getStats($input);;
+$stats = App::getStats($input);
 $hospitals = App::hospitals();
+
+if(!is_null($input)){
+    $buffer = $drugs;
+    $drugs = array();
+
+    foreach($buffer as $key => $value){
+        if((int)$value["price"]<(int)$stats["avg"]){
+            $value["tr_class"] = "success";
+            $drugs[] = $value;
+        }
+    }
+
+    foreach($buffer as $key => $value){
+        if((int)$value["price"]==(int)$stats["avg"]){
+            $value["tr_class"] = "warning";
+            $drugs[] = $value;
+        }
+    }
+
+    foreach($buffer as $key => $value){
+        if((int)$value["price"]>(int)$stats["avg"]){
+            $value["tr_class"] = "danger";
+            $drugs[] = $value;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,6 +56,7 @@ $hospitals = App::hospitals();
 		<link rel="stylesheet" href="css/datatables.css">
         <link rel="stylesheet" href="css/datepicker.css">
         <link href="css/a.css" rel="stylesheet">
+        <link href="css/auto-complete.css" rel="stylesheet">
 	</head>
 	<body>
     <nav class="navbar navbar-default" role="navigation">
@@ -48,7 +66,8 @@ $hospitals = App::hospitals();
             <ul class="nav navbar-nav">
                 <li class="active"><a href="index.php">Search</a></li>
                 <?php if(App::isLogin()){?>
-                <li class=""><a href="upload.php">Upload</a></li>
+                <li><a href="upload.php">Upload</a></li>
+                <li><a href="upload_history.php">Upload History</a></li>
                 <?php }?>
                 <?php if(App::isAdmin()){?>
                 <li><a href="admin/index.php">Admin</a></li>
@@ -80,7 +99,7 @@ $hospitals = App::hospitals();
             <form class="form-inline" role="form">
                 <div class="form-group">
                     <label class="sr-only" for="hospitalName">Hospital</label>
-                    <select class="form-control" id="hospitalName" name="hospitalId">
+                    <select class="form-control" id="hospitalName" name="hospitalId" style="width: 177px;">
                         <option value="">ทั้งหมด</option>
                         <?php foreach($hospitals as $key =>$value){?>
                             <option value="<?php echo $value["idhospital"];?>"
@@ -91,28 +110,49 @@ $hospitals = App::hospitals();
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="sr-only" for="startDate">Start Date</label>
-                    <input type="text" class="form-control" id="startDate" name="date_start" value="<?php if(isset($_GET["date_start"])) echo $_GET["date_start"];?>" placeholder="วันที่เริ่ม">
+                    <label class="sr-only" for="dt1">Receive Date</label>
+                    <input type="text" class="form-control" id="receive_date" name="receive_date" value="<?php if(isset($_GET["receive_date"])) echo $_GET["receive_date"];?>" placeholder="วันที่รับเวชภัณฑ์">
                 </div>
                 <div class="form-group">
-                    <label class="sr-only" for="endDate">End Date</label>
-                    <input type="text" class="form-control" id="endDate" name="date_end" value="<?php if(isset($_GET["date_end"])) echo $_GET["date_end"];?>" placeholder="วันที่สิ้นสุด">
+                    <label class="sr-only" for="NAME">Name</label>
+                    <input type="text" class="form-control auto-complete" id="NAME" name="NAME" value="<?php if(isset($_GET["NAME"])) echo $_GET["NAME"];?>" placeholder="ชื่อวัสดุ/เวชภัณฑ์">
                 </div>
                 <div class="form-group">
-                    <label class="sr-only" for="namePro">name Pro</label>
-                    <input type="text" class="form-control" id="namePro" name="name" value="<?php if(isset($_GET["name"])) echo $_GET["name"];?>" placeholder="ชื่อยา">
+                    <label class="sr-only" for="CONTENT">CONTENT</label>
+                    <input type="text" class="form-control auto-complete" id="CONTENT" name="CONTENT" value="<?php if(isset($_GET["CONTENT"])) echo $_GET["CONTENT"];?>" placeholder="ขนาด">
                 </div>
                 <div class="form-group">
-                    <label class="sr-only" for="price">pro price</label>
-                    <input type="text" class="form-control" id="price" name="total_money" value="<?php if(isset($_GET["total_money"])) echo $_GET["total_money"];?>" placeholder="ราคาสุทธิเกินกว่า">
+                    <label class="sr-only" for="CONTENT">TYPE</label>
+                    <input type="text" class="form-control auto-complete" id="TYPE" name="TYPE" value="<?php if(isset($_GET["TYPE"])) echo $_GET["TYPE"];?>" placeholder="ชนิด">
                 </div>
-                <button type="submit" class="btn btn-default">ค้นหา</button>
+                <br />
+                <div class="form-group">
+                    <label class="sr-only" for="pack">Pack</label>
+                    <input type="text" class="form-control auto-complete" id="pack" name="pack" value="<?php if(isset($_GET["pack"])) echo $_GET["pack"];?>" placeholder="ขนาดบรรจุ">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="price">Price</label>
+                    <input type="text" class="form-control auto-complete" id="price" name="price" value="<?php if(isset($_GET["price"])) echo $_GET["price"];?>" placeholder="ราคา/หน่วย">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="qty">QTY</label>
+                    <input type="text" class="form-control auto-complete" id="qty" name="qty" value="<?php if(isset($_GET["qty"])) echo $_GET["qty"];?>" placeholder="ปริมาณซื้อ">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="total_money">Total Money</label>
+                    <input type="text" class="form-control auto-complete" id="total_money" name="total_money" value="<?php if(isset($_GET["total_money"])) echo $_GET["total_money"];?>" placeholder="มูลค่ารวมเกินกว่า">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="startDate">VendorCode</label>
+                    <input type="text" class="form-control auto-complete" id="VendorCode" name="VendorCode" value="<?php if(isset($_GET["VendorCode"])) echo $_GET["VendorCode"];?>" placeholder="VendorCode">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 177px;">ค้นหา</button>
             </form>
             <hr>
             <div style="font-size: 18px;">
-                <span style="padding: 0 20px;">max: <span class="stat-max"><?php //echo $stats["max"];?></span></span>
-                <span style="padding: 0 20px 0 0;">avg: <span class="stat-avg"><?php //echo $stats["avg"];?></span></span>
-                <span style="padding: 0 20px;">min: <span class="stat-min"><?php //echo $stats["min"];?></span></span>
+                <span style="padding: 0 20px;">max: <span class="stat-max"><?php echo (int)$stats["max"];?></span></span>
+                <span style="padding: 0 20px 0 0;">avg: <span class="stat-avg"><?php echo (int)$stats["avg"];?></span></span>
+                <span style="padding: 0 20px;">min: <span class="stat-min"><?php echo (int)$stats["min"];?></span></span>
                 <!--
                 <span style="padding: 0 20px;"><button class="btn btn-default stat-calculate">Calculate</button></span>
                 -->
@@ -121,43 +161,38 @@ $hospitals = App::hospitals();
     </div>
 		<div id="wrap">
 			<div class="container">
+                <div class="pull-right" style="padding-bottom: 20px;">
+                    <i class="glyphicon glyphicon-download-alt"></i> <a href="export_pdf.php">PDF</a> <!--,<a href="export_excel.php">Excel</a>-->
+                </div>
 				<table cellpadding="0" cellspacing="0" border="0" class="datatable table table-striped table-bordered">
 					<thead>
 						<tr>
-							<th>วัน เดือน ปี</th>
-							<th>ชื่อยา</th>
-							<th>ขนาด</th>
-							<th>vendor code</th>
-							<th>ราคา/หน่วย</th>
-                            <th>ขนาดบรรจุ</th>
-                            <th>ปริมาณ</th>
-                            <th>ราคาสุทธิ</th>
                             <th>โรงพยาบาล</th>
+							<th>วันที่รับเวชภัณฑ์</th>
+							<th>ชื่อวัสดุ/เวชภัณฑ์</th>
+                            <th>ขนาด</th>
+                            <th>ชนิด</th>
+							<th>ขนาดบรรจุ</th>
+							<th>ราคา/หน่วย</th>
+                            <th>ปริมาณซื้อ</th>
+                            <th>มูลค่ารวม</th>
+                            <th>ผู้ขาย</th>
 						</tr>
 					</thead>
 					<tbody>
                         <?php
-                            foreach($drugs as $key=> $value){
-                                $trClass = "";
-                                if(isset($_GET["total_money"]) && (int)$_GET["total_money"]!=0){
-                                    if((int)$_GET["total_money"] > (int)$value["total_money"]){
-                                        $trClass = "danger";
-                                    }
-                                    if((int)$_GET["total_money"] < (int)$value["total_money"]){
-                                        $trClass = "success";
-                                    }
-                                }
-                            ?>
-                            <tr class="gradeX <?php echo $trClass;?>">
-                                <td><?php $dateTime = new DateTime($value["date_start"]); echo $dateTime->format("d/m/Y");?></td>
-                                <td><?php echo $value["Text76"];?></td>
+                            foreach($drugs as $key=> $value){?>
+                            <tr class="gradeX <?php if(isset($value["tr_class"])) echo $value["tr_class"];?>">
+                                <td><?php echo $value["hospital_name"];?></td>
+                                <td><?php $dateTime = new DateTime($value["receive_date"]); echo $dateTime->format("d/m/Y");?></td>
                                 <td><?php echo $value["NAME"];?></td>
                                 <td><?php echo $value["CONTENT"];?></td>
-                                <td class="price-field"><?php echo $value["price"];?></td>
+                                <td><?php echo $value["TYPE"];?></td>
                                 <td><?php echo $value["pack"];?></td>
+                                <td class="price-field"><?php echo $value["price"];?></td>
                                 <td><?php echo $value["qty"];?></td>
-                                <td><?php echo $value["total_money"];?></td>
-                                <td><?php echo $value["hospital_name"];?></td>
+                                <td><?php echo $value["price"]*$value["qty"];?></td>
+                                <td><?php echo $value["VendorCode"];?></td>
                             </tr>
                         <?php }?>
 				</table>
@@ -176,13 +211,14 @@ $hospitals = App::hospitals();
         <link rel="stylesheet" type="text/css" href="css/TableTools.css">
         -->
         <script src="js/bootstrap-datepicker.js"></script>
+        <script src="js/jquery.autocomplete.min.js"></script>
 		<script type="text/javascript">
 		$(document).ready(function() {
 			var oTable = $('.datatable').dataTable({
 				"sPaginationType": "bs_full",
                 "aLengthMenu": [[200],[200]],
                 "iDisplayLength": 200,
-                "aaSorting": [ [0,'asc'], [1,'asc'] ],
+                "aaSorting": [],
                 "sDom": 'T<"clear">lfrtip',
                 "bFilter": false
                 /*,
@@ -202,10 +238,11 @@ $hospitals = App::hospitals();
 				length_sel.addClass('form-control input-sm');
 			});
             $('#DataTables_Table_0_filter input').attr("placeholder", "ค้นหาละเอียดอีกครั้ง");
-            $('#startDate').datepicker({format:'dd/mm/yyyy'});
-            $('#endDate').datepicker({format:'dd/mm/yyyy'});
+            $('#receive_date').datepicker({format:'dd/mm/yyyy'});
 
             function calculateStats(){
+                return;
+
                 var rows = oTable._('tr', {"filter":"applied"});
                 console.log(rows);
                 var total = 0;
@@ -213,7 +250,7 @@ $hospitals = App::hospitals();
                 var min = 99999999999999;
                 var max = 0;
                 $(rows).each(function(index, el){
-                    var val = parseInt(el[4]);
+                    var val = parseInt(el[3]);
                     total += val;
                     if(val<min){
                         min = val;
@@ -250,6 +287,28 @@ $hospitals = App::hospitals();
             $('.stat-calculate').click(function(e){
                 e.preventDefault();
                 calculateStats();
+            });
+
+            $('.auto-complete[name="NAME"]').autocomplete({
+                serviceUrl: 'auto-complete.php?field=NAME'
+            });
+            $('.auto-complete[name="CONTENT"]').autocomplete({
+                serviceUrl: 'auto-complete.php?field=CONTENT'
+            });
+            $('.auto-complete[name="TYPE"]').autocomplete({
+                serviceUrl: 'auto-complete.php?field=TYPE'
+            });
+            $('.auto-complete[name="pack"]').autocomplete({
+                serviceUrl: 'auto-complete.php?field=pack'
+            });
+            $('.auto-complete[name="price"]').autocomplete({
+                serviceUrl: 'auto-complete.php?field=price'
+            });
+            $('.auto-complete[name="qty"]').autocomplete({
+                serviceUrl: 'auto-complete.php?field=qty'
+            });
+            $('.auto-complete[name="VendorCode"]').autocomplete({
+                serviceUrl: 'auto-complete.php?field=VendorCode'
             });
         });
 		</script>

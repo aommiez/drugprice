@@ -13,37 +13,7 @@ if(!App::isLogin()){
 }
 
 $user = App::getUser();
-$input = isset($_GET)? $_GET: null;
-
-$error_message = null;
-if($_SERVER["REQUEST_METHOD"]=="POST"){
-    try {
-        App::db()->beginTransaction();
-        if(!App::isLogin()){
-            header("location: index.php");
-            exit();
-        }
-        if(!isset($_FILES["excel_doc"]) || !file_exists($_FILES["excel_doc"]["tmp_name"])){
-            throw new Exception("Can't found file upload");
-        }
-        $file = $_FILES["excel_doc"];
-        $name = $file["name"];
-        $explodeName = explode(".", $name);
-        $ext = array_pop($explodeName);
-        $allowed = array("xls", "xlsx");
-        if(!in_array($ext, $allowed)){
-            throw new Exception("File upload allowed only excel file(xls,xlsx)");
-        }
-        App::importDrug($file["tmp_name"], time().'.'.$ext, $_POST["hospitalId"], $user["iduser"]);
-        header("location: index.php");
-        App::db()->commit();
-        exit();
-    }
-    catch (Exception $e) {
-        App::db()->rollBack();;
-        $error_message = $e->getMessage();
-    }
-}
+$history = App::getUploadHistory($user["iduser"]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,8 +36,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         <ul class="nav navbar-nav">
             <li class=""><a href="index.php">Search</a></li>
             <?php if(App::isLogin()){?>
-            <li class="active"><a href="upload.php">Upload</a></li>
-            <li><a href="upload_history.php">Upload History</a></li>
+                <li><a href="upload.php">Upload</a></li>
+                <li class="active"><a href="upload_history.php">Upload History</a></li>
             <?php }?>
             <?php if(App::isAdmin()){?>
                 <li><a href="admin/index.php">Admin</a></li>
@@ -94,35 +64,24 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         <?php }?>
     </div><!-- /.navbar-collapse -->
 </nav>
-<div class="jumbotron">
-    <div class="container" >
-        <div class="text-center">
-            ดาวโหลด ไฟล์ตาราง Excel ที่นี่ : <a href="example.xlsx"> download</a>
-        </div>
-        <form class="form-inline text-center" role="form" method="post" enctype="multipart/form-data">
-            <div class="clearfix"></div>
-            <div class="form-group">
-                <span class="" style="display: inline-block; font-size: 16px;">อัพโหลดตารางไฟล์</span>
-                <input type="file" class="form-control" name="excel_doc" placeholder="Excel file" style="width: 200px;">
-            </div>
-            <div class="form-group">
-                <select class="form-control" name="hospitalId">
-                    <?php
-                    $hospitals = App::hospitals();
-                    foreach($hospitals as $key =>$value){?>
-                        <option value="<?php echo $value["idhospital"];?>"
-                            <?php if(isset($_POST["hospitalId"]) && $_POST["hospitalId"]==$value["idhospital"]) echo "selected"; ?>>
-                            <?php echo $value["hospital_name"];?>
-                        </option>
-                    <?php }?>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-default">upload</button>
-        </form>
-        <?php if(!is_null($error_message)){?>
-        <div class="alert alert-warning text-center"><?php echo $error_message;?></div>
+<div class="container" >
+    <h4 class="text-center" style="padding: 20px;">Upload History</h4>
+    <table class="table">
+        <tr>
+            <th class="text-center">เวลา</th>
+            <th class="text-center">ไฟล์</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <?php foreach($history as $key =>$value){?>
+        <tr>
+            <td class="text-center"><?php $dateTime = new DateTime($value["created_at"]); echo $dateTime->format("H:i")." - ".$dateTime->format("j/n/Y");?></td>
+            <td class="text-center"><a href="docs/<?php echo $value["filename"];?>">download</a></td>
+            <td class="text-center delete-button"><a href="xls_delete.php?id=<?php echo $value["id"];?>">delete</a></td>
+            <td class="text-center"><a href="history_data.php?id=<?php echo $value["id"];?>">ดูข้อมูล</a></td>
+        </tr>
         <?php }?>
-    </div>
+    </table>
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -131,7 +90,13 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
 <script src="js/datatables.js"></script>
 <script src="js/bootstrap-datepicker.js"></script>
 <script type="text/javascript">
-
+$(function(){
+    $('.delete-button').click(function(e){
+        if(!window.confirm("Are you sure for delete this data?")){
+            e.preventDefault();
+        }
+    });
+});
 </script>
 </body>
 </html>

@@ -13,37 +13,7 @@ if(!App::isLogin()){
 }
 
 $user = App::getUser();
-$input = isset($_GET)? $_GET: null;
-
-$error_message = null;
-if($_SERVER["REQUEST_METHOD"]=="POST"){
-    try {
-        App::db()->beginTransaction();
-        if(!App::isLogin()){
-            header("location: index.php");
-            exit();
-        }
-        if(!isset($_FILES["excel_doc"]) || !file_exists($_FILES["excel_doc"]["tmp_name"])){
-            throw new Exception("Can't found file upload");
-        }
-        $file = $_FILES["excel_doc"];
-        $name = $file["name"];
-        $explodeName = explode(".", $name);
-        $ext = array_pop($explodeName);
-        $allowed = array("xls", "xlsx");
-        if(!in_array($ext, $allowed)){
-            throw new Exception("File upload allowed only excel file(xls,xlsx)");
-        }
-        App::importDrug($file["tmp_name"], time().'.'.$ext, $_POST["hospitalId"], $user["iduser"]);
-        header("location: index.php");
-        App::db()->commit();
-        exit();
-    }
-    catch (Exception $e) {
-        App::db()->rollBack();;
-        $error_message = $e->getMessage();
-    }
-}
+$drugs = App::getHistoryData($_GET["id"]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,8 +36,8 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         <ul class="nav navbar-nav">
             <li class=""><a href="index.php">Search</a></li>
             <?php if(App::isLogin()){?>
-            <li class="active"><a href="upload.php">Upload</a></li>
-            <li><a href="upload_history.php">Upload History</a></li>
+                <li><a href="upload.php">Upload</a></li>
+                <li class="active"><a href="upload_history.php">Upload History</a></li>
             <?php }?>
             <?php if(App::isAdmin()){?>
                 <li><a href="admin/index.php">Admin</a></li>
@@ -94,34 +64,38 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         <?php }?>
     </div><!-- /.navbar-collapse -->
 </nav>
-<div class="jumbotron">
-    <div class="container" >
-        <div class="text-center">
-            ดาวโหลด ไฟล์ตาราง Excel ที่นี่ : <a href="example.xlsx"> download</a>
-        </div>
-        <form class="form-inline text-center" role="form" method="post" enctype="multipart/form-data">
-            <div class="clearfix"></div>
-            <div class="form-group">
-                <span class="" style="display: inline-block; font-size: 16px;">อัพโหลดตารางไฟล์</span>
-                <input type="file" class="form-control" name="excel_doc" placeholder="Excel file" style="width: 200px;">
-            </div>
-            <div class="form-group">
-                <select class="form-control" name="hospitalId">
-                    <?php
-                    $hospitals = App::hospitals();
-                    foreach($hospitals as $key =>$value){?>
-                        <option value="<?php echo $value["idhospital"];?>"
-                            <?php if(isset($_POST["hospitalId"]) && $_POST["hospitalId"]==$value["idhospital"]) echo "selected"; ?>>
-                            <?php echo $value["hospital_name"];?>
-                        </option>
-                    <?php }?>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-default">upload</button>
-        </form>
-        <?php if(!is_null($error_message)){?>
-        <div class="alert alert-warning text-center"><?php echo $error_message;?></div>
+<div class="container" >
+    <h4 class="text-center" style="padding: 20px;">Upload History</h4>
+    <table cellpadding="0" cellspacing="0" border="0" class="datatable table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>วัน เดือน ปี</th>
+            <th>ชื่อยา</th>
+            <th>ขนาด</th>
+            <th>ราคา/หน่วย</th>
+            <th>ขนาดบรรจุ</th>
+            <th>ปริมาณ</th>
+            <th>ราคาสุทธิ</th>
+            <th>โรงพยาบาล</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach($drugs as $key=> $value){?>
+            <tr>
+                <td><?php $dateTime = new DateTime($value["dt1"]); echo $dateTime->format("d/m/Y");?></td>
+                <td><?php echo $value["NAME"];?></td>
+                <td><?php echo $value["CONTENT"];?></td>
+                <td class="price-field"><?php echo $value["price"];?></td>
+                <td><?php echo $value["pack"];?></td>
+                <td><?php echo $value["qty"];?></td>
+                <td><?php echo $value["total_money"];?></td>
+                <td><?php echo App::getHospitalName($value["hospitalId"]);?></td>
+            </tr>
         <?php }?>
+    </table>
+    <div class="text-center" style="padding: 20px;">
+        <a href="upload_history.php">back</a>
     </div>
 </div>
 
